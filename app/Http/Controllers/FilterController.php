@@ -30,7 +30,6 @@ class FilterController extends Controller
         $newListItems = explode(',', $newListItems);
         $newListItems = array_chunk($newListItems, '3');
 
-
         // filter the array
         $length = count($newListItems);
 
