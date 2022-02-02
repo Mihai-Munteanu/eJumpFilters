@@ -21,13 +21,16 @@
         </style>
     </head>
     <body class="antialiased" style="margin-left: 20px; margin-top:20px">
-        <form method="GET" action="#">
-            <label for="aList" class="form-label">A:</label>
-                <select class="form-select" name="aList" id="aList" style="border:solid 1px black; border-radius:4px; margin-bottom:10px">
+        <form method="GET" action="#" id="filterFormId">
+            <label for="filterA" class="form-label">A:</label>
+                <select
+                onchange="filterSelected('filterA');"
+                name="filterA" id="filterA" class="width:60px; filterA-filter" style="border:solid 1px black; border-radius:4px; margin-bottom:10px">
                     <option value="{{ NULL }}">Toate</option>
-                    @foreach ($aList as $item)
+                    @foreach ($filterA as $item)
                        <option value="{{ $item }}"
-                            {{ request('item') == $item ? "selected='selected'" : ''}}
+                            {{ request('filterA') == $item ? "selected='selected'" : ''}}
+                            {{ count($filterA) == 1 ? "selected='A1'" : '' }}
                              >
                             {{ $item }}
                         </option>
@@ -35,42 +38,51 @@
                 </select>
             </div>
             </br>
-            <label for="bList" class="form-label">B:</label>
-                <select class="form-select" name="bList" id="bList" style="border:solid 1px black; border-radius:4px; margin-bottom:10px;">
+            <label for="filterB" class="form-label">B:</label>
+                <select
+                    onchange="filterSelected('filterB');" class=" width:60px;  filterB-filter" name="filterB" id="filterB" style="border:solid 1px black; border-radius:4px; margin-bottom:10px;">
                     <option value="{{ NULL }}">Toate</option>
-                    @foreach ($bList as $item)
+                    @foreach ($filterB as $item)
                        <option value="{{ $item }}"
-                            {{ request('item') == $item ? "selected='selected'" : ''}}
-                             >
-                            {{ $item }}
+                       {{ request('filterB') == $item ? "selected='selected'" : ''}}
+                       {{ count($filterA) == 1 ? "selected='A1'" : '' }}
+                       >
+                      {{ $item }}
                         </option>
                     @endforeach
                 </select>
             </div>
             </br>
-            <label for="cList" class="form-label">C:</label>
-                <select class="form-select" name="cList" id="cList" style="border:solid 1px black; border-radius:4px; margin-bottom:10px">
+            <label for="filterC" class="form-label">C:</label>
+                <select onchange="filterSelected('filterC');" class=" width:60px;  filterC-filter" name="filterC" id="filterC" style="border:solid 1px black; border-radius:4px; margin-bottom:10px">
                     <option value="{{ NULL }}">Toate</option>
-                    @foreach ($cList as $item)
+                    @foreach ($filterC as $item)
                        <option value="{{ $item }}"
-                            {{ request('item') == $item ? "selected='selected'" : ''}}
-                             >
-                            {{ $item }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                        {{ request('filterC') == $item ? "selected='selected'" : ''}}
+                        {{ count($filterA) == 1 ? "selected='A1'" : '' }}
 
+                        >
+                        {{ $item }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </form>
-
 
         @foreach ($newListItems as $items)
             @foreach ($items as $item)
                 {{ $item }},
             @endforeach
-
             </br>
         @endforeach
-
     </body>
+    <script>
+        function filterSelected(name) {
+            // submit Form
+            document.getElementById('filterFormId').submit()
+        }
+    </script>
+
 </html>
+
+

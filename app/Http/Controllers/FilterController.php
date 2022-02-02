@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class FilterController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
 
         // get list of items
         $listItems = Http::get('https://radupintilie.dev.ascensys.ro/code_tests/testData.txt')->body();
@@ -30,27 +31,45 @@ class FilterController extends Controller
         $newListItems = array_chunk($newListItems, '3');
 
 
-        $aList = [];
-        $bList = [];
-        $cList = [];
+        // filter the array
+        $length = count($newListItems);
 
-        foreach($newListItems as $items) {
-            array_push($aList, $items[0]);
-            array_push($bList, $items[1]);
-            array_push($cList, $items[2]);
+        for($i = 0; $i < $length; $i ++) {
+
+            if(collect($request)->has('filterA') && $request['filterA'] !== Null && $request['filterA'] !==  $newListItems[$i][0]) {
+                unset($newListItems[$i]);
+            }
+
+            if(array_key_exists($i, $newListItems) && collect($request)->has('filterB') && $request['filterB'] !== Null && $request['filterB'] !==  $newListItems[$i][1]) {
+                unset($newListItems[$i]);
+            }
+
+            if(array_key_exists($i, $newListItems) && collect($request)->has('filterC') && $request['filterC'] !== Null && $request['filterC'] !==  $newListItems[$i][2]) {
+                unset($newListItems[$i]);
+            }
         }
 
+        // get the filters input
+        $filterA = [];
+        $filterB = [];
+        $filterC = [];
 
-       $aList = array_unique($aList);
-       $bList = array_unique($bList);
-       $cList = array_unique($cList);
+        foreach($newListItems as $items) {
+            array_push($filterA, $items[0]);
+            array_push($filterB, $items[1]);
+            array_push($filterC, $items[2]);
+        }
+
+       $filterA = array_unique($filterA);
+       $filterB = array_unique($filterB);
+       $filterC = array_unique($filterC);
 
 
        return view('welcome', [
            'newListItems' => $newListItems,
-           'aList' => $aList,
-           'bList' => $bList,
-           'cList' => $cList,
+           'filterA' => $filterA,
+           'filterB' => $filterB,
+           'filterC' => $filterC,
        ]);
 
     }
