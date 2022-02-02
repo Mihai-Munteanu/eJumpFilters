@@ -12,48 +12,47 @@ class FilterController extends Controller
 
         // get list of items
         $listItems = Http::get('https://radupintilie.dev.ascensys.ro/code_tests/testData.txt')->body();
+        $listItems = explode("\r\n", $listItems);
 
-        $listItems = str_split($listItems);
 
-        $newListItems = [];
+        // find the number of elements on a row
+        $firstRow = explode(",", $listItems[0]);
+        $rowElementsCount = count($firstRow);
 
-        foreach($listItems as $item) {
-
-           if($item !== "\r" && $item !== "\n") {
-                array_push($newListItems, $item);
-           } elseIf($item === "\r" && $item !== "\n") {
-                array_push($newListItems, ',');
-           }
-        }
-
-        $newListItems = implode('', $newListItems);
-        $newListItems = explode(',', $newListItems);
-        $newListItems = array_chunk($newListItems, '3');
+        // convert the list into an array of arrays
+        $listItems = implode(",", $listItems);
+        $listItems = explode(",", $listItems);
+        $listItems = array_chunk($listItems, $rowElementsCount);
 
         // filter the array
-        $length = count($newListItems);
+        $length = count($listItems);
+
+        // array_filter($listItems, function($value) use ($key, $keyValue) {
+        //     return $value[$key] == $keyValue;
+        //  });
 
         for($i = 0; $i < $length; $i ++) {
 
-            if(collect($request)->has('filterA') && $request['filterA'] !== Null && $request['filterA'] !==  $newListItems[$i][0]) {
-                unset($newListItems[$i]);
+            if(collect($request)->has('filterA') && $request['filterA'] !== Null && $request['filterA'] !==  $listItems[$i][0]) {
+                unset($listItems[$i]);
             }
 
-            if(array_key_exists($i, $newListItems) && collect($request)->has('filterB') && $request['filterB'] !== Null && $request['filterB'] !==  $newListItems[$i][1]) {
-                unset($newListItems[$i]);
+            if(array_key_exists($i, $listItems) && collect($request)->has('filterB') && $request['filterB'] !== Null && $request['filterB'] !==  $listItems[$i][1]) {
+                unset($listItems[$i]);
             }
 
-            if(array_key_exists($i, $newListItems) && collect($request)->has('filterC') && $request['filterC'] !== Null && $request['filterC'] !==  $newListItems[$i][2]) {
-                unset($newListItems[$i]);
+            if(array_key_exists($i, $listItems) && collect($request)->has('filterC') && $request['filterC'] !== Null && $request['filterC'] !==  $listItems[$i][2]) {
+                unset($listItems[$i]);
             }
         }
 
-        // get the filters input
+
+        // get each filter inputs;
         $filterA = [];
         $filterB = [];
         $filterC = [];
 
-        foreach($newListItems as $items) {
+        foreach($listItems as $items) {
             array_push($filterA, $items[0]);
             array_push($filterB, $items[1]);
             array_push($filterC, $items[2]);
@@ -63,9 +62,8 @@ class FilterController extends Controller
        $filterB = array_unique($filterB);
        $filterC = array_unique($filterC);
 
-
        return view('welcome', [
-           'newListItems' => $newListItems,
+           'listItems' => $listItems,
            'filterA' => $filterA,
            'filterB' => $filterB,
            'filterC' => $filterC,

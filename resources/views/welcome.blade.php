@@ -12,7 +12,7 @@
 
             <label for="filterA">A:</label>
                 <select
-                    onchange="filterSelected('filterA');"
+                    onchange="filterSelected();"
                     name="filterA"
                     id="filterA"
                     class="width:60px;"
@@ -35,7 +35,7 @@
 
             <label for="filterB">B:</label>
                 <select
-                    onchange="filterSelected('filterB');"
+                    onchange="filterSelected();"
                     name="filterB"
                     id="filterB"
                     class=" width:60px;  filterB-filter"
@@ -58,7 +58,7 @@
 
             <label for="filterC">C:</label>
                 <select
-                    onchange="filterSelected('filterC');"
+                    onchange="filterSelected();"
                     name="filterC"
                     id="filterC"
                     class=" width:60px;  filterC-filter"
@@ -78,7 +78,7 @@
             </div>
         </form>
 
-        @foreach ($newListItems as $items)
+        @foreach ($listItems as $items)
             @foreach ($items as $item)
                 {{ $item }},
             @endforeach
